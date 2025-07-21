@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import ItemsCard from '../Components/ItemsCard';
+import { API_ENDPOINTS, getAuthHeaders } from '../../config/api';
 
 export default function ItemsPage() {
   const [items, setItems] = useState([]);
@@ -9,7 +10,10 @@ export default function ItemsPage() {
 
   const loadItems = async () => {
     try {
-      const response = await axios.get('http://13.232.150.130:3000/api/v1/items/get');
+      const headers = await getAuthHeaders();
+      const response = await axios.get(API_ENDPOINTS.ITEMS + '/get', {
+        headers,
+      });
       console.log('Items API response:', response.data);
       setItems(response.data);
     } catch (error) {
@@ -35,9 +39,9 @@ export default function ItemsPage() {
     <View style={styles.container}>
       <FlatList
         data={items}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={item => item._id.toString()}
         renderItem={({ item }) => (
-          <ItemsCard name={item.name} price={item.price} />
+          <ItemsCard name={item.name} price={item.price} imageUrl={item.image} />
         )}
       />
     </View>

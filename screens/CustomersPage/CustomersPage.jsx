@@ -1,46 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, FlatList, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Alert,
+  Text,
+  SafeAreaView,
+} from 'react-native';
 import axios from 'axios';
 import CustomerCard from '../Components/CustomerCard';
 import { useNavigation } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
+
+import { API_ENDPOINTS, getAuthHeaders } from '../../config/api';
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState([]);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
 
   const loadCustomers = async () => {
     try {
-      const response = await axios.get(
-        'http://13.232.150.130:3000/api/v1/customers/get',
-      );
-      console.log('API response:', response.data);
-      setCustomers(response.data); // Make sure your backend returns an array!
+      const headers = await getAuthHeaders();
+      const response = await axios.get(API_ENDPOINTS.CUSTOMERS + '/get', {
+        headers,
+      });
+      setCustomers(response.data);
     } catch (error) {
-      console.error('Error loading customers:', error);
+      Alert.alert('Error', 'Failed to load customers');
     }
   };
-  useEffect(() => {
-    if (isFocused) {
-      loadCustomers(); // ✅ Runs every time page is focused!
-    }
-  }, [isFocused]);
 
   const deleteCustomer = async id => {
-    console.log(id);
-   
     try {
-      await axios.delete(
-        `http://13.232.150.130:3000/api/v1/customers/delete/${id}`,
-      );
-      console.log(`Customer ${id} deleted`);
-
-      // Remove from local state
-      const updated = customers.filter(customer => customer._id !== id);
-      setCustomers(updated);
+      const headers = await getAuthHeaders();
+      await axios.delete(`${API_ENDPOINTS.CUSTOMERS}/delete/${id}`, {
+        headers,
+      });
+      setCustomers(prev => prev.filter(customer => customer._id !== id));
     } catch (error) {
-      console.error('Error deleting customer:', error);
       Alert.alert('Error', 'Failed to delete customer');
     }
   };
@@ -54,29 +54,74 @@ export default function CustomersPage() {
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Load Customers" onPress={() => loadCustomers()} />
-
-      <FlatList
-        data={customers}
-        keyExtractor={item => item._id.toString()}
-        renderItem={({ item }) => (
-          <CustomerCard
-            name={item.name}
-            email={item.email}
-            onDelete={() => deleteCustomer(item._id)}
-            onUpdate={() => updateCustomer(item)}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Customers</Text>
+        {customers.length === 0 ? (
+          <Text style={styles.emptyText}>No customers found.</Text>
+        ) : (
+          <FlatList
+            data={customers}
+            keyExtractor={item =>
+              item._id ? item._id.toString() : Math.random().toString()
+            }
+            renderItem={({ item }) => (
+              <View style={styles.cardWrapper}>
+                <CustomerCard
+                  name={item.name}
+                  email={item.email}
+                  imageUrl={item.image} // <-- This is the key!
+                  onDelete={() => deleteCustomer(item._id)}
+                  onUpdate={() => updateCustomer(item)}
+                />
+              </View>
+            )}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
           />
         )}
-      />
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f6fa',
+  },
   container: {
     flex: 1,
-    marginTop: 50,
-    paddingHorizontal: 20,
+    backgroundColor: '#f5f6fa',
+    paddingTop: 40,
+    paddingHorizontal: 16,
+  },
+  header: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#2196F3',
+    marginBottom: 20,
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 18,
+    marginTop: 40,
+  },
+  listContent: {
+    paddingBottom: 80,
+  },
+  cardWrapper: {
+    marginBottom: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 });

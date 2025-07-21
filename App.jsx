@@ -14,6 +14,7 @@ import HomePage from './screens/HomePage/HomePage';
 import CustomersPage from './screens/CustomersPage/CustomersPage';
 import ItemsPage from './screens/ItemsPage/ItemsPage';
 import EditCustomerScreen from './screens/EditPages/EditCustomerScreen';
+import ImageList from './screens/ImageList/ImageList';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Home" component={HomePage} />
+          <Stack.Screen name="ImageList" component={ImageList} />
           <Stack.Screen name="CustomersPage" component={CustomersPage} />
           <Stack.Screen name="EditCustomerScreen" component={EditCustomerScreen} />
           <Stack.Screen name="ItemsPage" component={ItemsPage} />

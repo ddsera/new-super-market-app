@@ -1,7 +1,12 @@
 // LoginScreen.js
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button, Title, Text } from 'react-native-paper';
+import { API_ENDPOINTS } from '../../config/api';
 
 // Logo Component
 const Logo = () => (
@@ -18,10 +23,60 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Replace with your login logic
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+
+    try {
+      console.log('=== LOGIN DEBUG ===');
+      console.log('Email:', email);
+      console.log('Password length:', password.length);
+      console.log('API endpoint:', API_ENDPOINTS.LOGIN);
+      console.log('Attempting login with:', { email, password: '***' });
+
+      const response = await axios.post(API_ENDPOINTS.LOGIN, {
+        email,
+        password,
+      });
+
+      console.log('Login response:', response.data);
+
+      // Handle JWT token in response
+      const { token, message } = response.data;
+      if (token) {
+        await AsyncStorage.setItem('token', token);
+        const savedToken = await AsyncStorage.getItem('token');
+        console.log('Token saved in AsyncStorage:', savedToken);
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('Login Error', message || 'No token received from server');
+      }
+    } catch (error) {
+      console.error('Login error details:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        code: error.code,
+        url: error.config?.url,
+      });
+
+      let errorMessage = 'Login failed. Please try again.';
+
+      if (error.response?.status === 401) {
+        errorMessage = 'Invalid email or password';
+      } else if (error.response?.status === 404) {
+        errorMessage = 'User not found';
+      } else if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+        errorMessage =
+          'Cannot connect to server. Please check your internet connection.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      Alert.alert('Login Error', errorMessage);
+    }
   };
 
   return (
@@ -49,7 +104,7 @@ export default function LoginScreen({ navigation }) {
         style={styles.input}
       />
 
-      <Button mode="contained" onPress={() => navigation.navigate('Home')} style={styles.button}>
+      <Button mode="contained" onPress={handleLogin} style={styles.button}>
         Login
       </Button>
 

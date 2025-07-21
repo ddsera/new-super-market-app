@@ -1,11 +1,20 @@
 // HomeScreen.js
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, Title } from 'react-native-paper';
+import { Button, Title, IconButton } from 'react-native-paper';
+
 
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      {/* Small button in the top-right corner for ImageLoad */}
+      <IconButton
+        icon="image"
+        size={24}
+        style={styles.imageButton}
+        onPress={() => navigation.navigate('ImageList')}
+        accessibilityLabel="Go to ImageList"
+      />
       <Title style={styles.title}>Home</Title>
 
       <Button
@@ -34,6 +43,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+  },
+  imageButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+    backgroundColor: '#fff',
   },
   title: {
     textAlign: 'center',

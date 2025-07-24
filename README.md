@@ -1,97 +1,115 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# SuperMarket Pro - React Native App
 
-# Getting Started
+SuperMarket Pro is a mobile application built with React Native that allows supermarket staff to manage customer and item information efficiently. This application is designed to streamline in-store operations by providing a simple interface to view, add, edit, and delete customer and item records.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+*   **Customer Management**:
+    *   View a list of all customers.
+    *   Add new customers with their name and email.
+    *   Update existing customer information.
+    *   Delete customers from the database.
+*   **Item Management**:
+    *   View a list of all available items in the supermarket.
+    *   View details for each item, including name and price.
+*   **User Authentication**:
+    *   Secure login and registration for staff members.
+*   **Image Uploads**:
+    *   Upload images for customers and items.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Getting Started
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+*   Node.js (>=18)
+*   npm or Yarn
+*   React Native CLI
+*   Android Studio or Xcode for running on an emulator/simulator or a physical device.
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/your-username/newSuperMarketProject.git
+    cd newSuperMarketProject
+    ```
+
+2.  **Install dependencies:**
+
+    Using npm:
+    ```sh
+    npm install
+    ```
+
+    Or using Yarn:
+    ```sh
+    yarn install
+    ```
+
+## Running the App
+
+### 1. Start the Metro Bundler
+
+In a terminal, run the following command:
 
 ```sh
-# Using npm
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 2. Run on a Device or Emulator
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+#### Android
 
-### Android
+Open a new terminal and run:
 
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+#### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+For iOS, you need to install the CocoaPods dependencies first:
 
 ```sh
-bundle install
+cd ios
+pod install
+cd ..
 ```
 
-Then, and every time you update your native dependencies, run:
+Then, run the app:
 
 ```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Main Dependencies
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+*   **React Native**: The core framework for building the app.
+*   **React Navigation**: For handling navigation between screens.
+*   **React Native Paper**: For UI components and theming.
+*   **Axios**: For making HTTP requests to the backend API.
+*   **AsyncStorage**: For local data storage.
+*   **React Native Image Picker**: For selecting images from the device.
 
-## Step 3: Modify your app
+## API Endpoints
 
-Now that you have successfully run the app, let's make changes!
+The application interacts with a backend API to manage data. The base URL for the API is `http://13.232.150.130:3000`.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+*   **Authentication**:
+    *   `POST /api/v1/users/login`
+    *   `POST /api/v1/users/register`
+*   **Customers**:
+    *   `GET /api/v1/customers/get`
+    *   `POST /api/v1/customers/delete/:id`
+*   **Items**:
+    *   `GET /api/v1/items/get`
+*   **Image Uploads**:
+    *   `GET /api/v1/uploads/images`
+    *   `POST /api/v1/uploads`
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+---
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This README provides a comprehensive overview of the SuperMarket Pro application, from its features to its setup and API documentation.
